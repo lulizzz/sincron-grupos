@@ -173,7 +173,7 @@ export default function MessagesPage() {
         .eq("id_organizacao", usuarioSistema.id_organizacao)
         .order("dt_create", { ascending: false })
 
-      setMensagens(msgs || [])
+      setMensagens((msgs || []) as MensagemProgramada[])
     } catch (err) {
       console.error("Erro ao carregar dados:", err)
     } finally {
@@ -272,7 +272,7 @@ export default function MessagesPage() {
 
       // Se for enviar agora, processar envio
       if (enviarAgora && instanceToken && novaMensagem) {
-        await processarEnvio(novaMensagem)
+        await processarEnvio(novaMensagem as MensagemProgramada)
       }
 
       toast.success(enviarAgora ? "Mensagem enviada!" : "Mensagem agendada!")
