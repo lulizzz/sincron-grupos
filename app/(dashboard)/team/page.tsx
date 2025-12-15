@@ -437,78 +437,72 @@ export default function TeamPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-48" />
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-4 w-36" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} className="h-28" />
+            <Skeleton key={i} className="h-20" />
           ))}
         </div>
-        <Skeleton className="h-96" />
+        <Skeleton className="h-72" />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Equipe</h2>
-          <p className="text-muted-foreground">Gerencie membros, funcoes e permissoes.</p>
+          <h2 className="text-lg font-bold text-foreground">Equipe</h2>
+          <p className="text-sm text-muted-foreground">Membros e permissoes</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Bell className="h-4 w-4 text-muted-foreground" />
+        </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground uppercase">Total Membros</span>
-              <Users className="h-6 w-6 text-muted-foreground" />
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Total</span>
+              <Users className="h-4 w-4 text-muted-foreground" />
             </div>
-            <p className="text-3xl font-bold">{stats.total}</p>
-            <p className="text-sm text-muted-foreground mt-1">Usuarios na organizacao</p>
+            <p className="text-xl font-bold">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground uppercase">Proprietarios</span>
-              <Crown className="h-6 w-6 text-amber-500" />
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Owners</span>
+              <Crown className="h-4 w-4 text-amber-500" />
             </div>
-            <p className="text-3xl font-bold">{stats.owners}</p>
-            <p className="text-sm text-muted-foreground mt-1">Acesso total</p>
+            <p className="text-xl font-bold">{stats.owners}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground uppercase">Administradores</span>
-              <ShieldCheck className="h-6 w-6 text-primary" />
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Admins</span>
+              <ShieldCheck className="h-4 w-4 text-primary" />
             </div>
-            <p className="text-3xl font-bold">{stats.admins}</p>
-            <p className="text-sm text-muted-foreground mt-1">Gerenciamento completo</p>
+            <p className="text-xl font-bold">{stats.admins}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground uppercase">Membros</span>
-              <User className="h-6 w-6 text-secondary" />
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Membros</span>
+              <User className="h-4 w-4 text-secondary" />
             </div>
-            <p className="text-3xl font-bold">{stats.members}</p>
-            <p className="text-sm text-muted-foreground mt-1">Acesso limitado</p>
+            <p className="text-xl font-bold">{stats.members}</p>
           </CardContent>
         </Card>
       </div>
@@ -516,33 +510,33 @@ export default function TeamPage() {
       {/* Team Management */}
       <Card>
         {/* Filters Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b gap-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 w-full">
-            <div className="relative flex-1 max-w-md w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border-b gap-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 flex-1 w-full">
+            <div className="relative flex-1 max-w-xs w-full">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome ou email..."
+                placeholder="Buscar..."
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                className="pl-9"
+                className="pl-8 h-9 text-sm"
               />
             </div>
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Funcao: Todas" />
+              <SelectTrigger className="w-32 h-9 text-sm">
+                <SelectValue placeholder="Funcao" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Funcao: Todas</SelectItem>
-                <SelectItem value="owner">Proprietario</SelectItem>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="owner">Owner</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="member">Membro</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <PermissionGate permission="gerenciar_usuarios">
-            <Button onClick={() => setInviteDialogOpen(true)}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Convidar Membro
+            <Button size="sm" onClick={() => setInviteDialogOpen(true)}>
+              <UserPlus className="h-3.5 w-3.5 mr-1.5" />
+              Convidar
             </Button>
           </PermissionGate>
         </div>
@@ -552,12 +546,12 @@ export default function TeamPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
-                <TableHead className="font-medium">Membro</TableHead>
-                <TableHead className="font-medium">Funcao</TableHead>
-                <TableHead className="font-medium">Grupos Atribuidos</TableHead>
-                <TableHead className="font-medium">Ultimo Acesso</TableHead>
-                <TableHead className="font-medium">Status</TableHead>
-                <TableHead className="font-medium text-right">Acoes</TableHead>
+                <TableHead className="font-medium text-xs py-2">Membro</TableHead>
+                <TableHead className="font-medium text-xs py-2">Funcao</TableHead>
+                <TableHead className="font-medium text-xs py-2">Grupos</TableHead>
+                <TableHead className="font-medium text-xs py-2">Acesso</TableHead>
+                <TableHead className="font-medium text-xs py-2">Status</TableHead>
+                <TableHead className="font-medium text-xs py-2 text-right">Acoes</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -568,72 +562,61 @@ export default function TeamPage() {
 
                 return (
                   <TableRow key={usuario.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-muted">
-                            <User className="h-5 w-5 text-muted-foreground" />
+                    <TableCell className="py-2">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-muted text-xs">
+                            <User className="h-3.5 w-3.5 text-muted-foreground" />
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-semibold">{usuario.nome}</p>
-                          <p className="text-sm text-muted-foreground">{usuario.email}</p>
+                          <p className="font-medium text-sm">{usuario.nome}</p>
+                          <p className="text-xs text-muted-foreground">{usuario.email}</p>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className={cn("gap-1", roleInfo.bgColor, roleInfo.textColor)}>
-                        <RoleIcon className="h-3 w-3" />
+                    <TableCell className="py-2">
+                      <Badge variant="secondary" className={cn("gap-1 text-[10px] px-1.5 py-0", roleInfo.bgColor, roleInfo.textColor)}>
+                        <RoleIcon className="h-2.5 w-2.5" />
                         {roleInfo.label}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      {usuario.role === "owner" ? (
-                        <>
-                          <p>Todos os grupos</p>
-                          <p className="text-sm text-muted-foreground">Acesso total</p>
-                        </>
-                      ) : (
-                        <>
-                          <p>-</p>
-                          <p className="text-sm text-muted-foreground">-</p>
-                        </>
-                      )}
+                    <TableCell className="py-2 text-xs">
+                      {usuario.role === "owner" ? "Todos" : "-"}
                     </TableCell>
-                    <TableCell>
-                      <p>{lastAccess.time}</p>
-                      <p className="text-sm text-muted-foreground">{lastAccess.date}</p>
+                    <TableCell className="py-2 text-xs">
+                      {lastAccess.time}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-2">
                       {usuario.accepted_at ? (
-                        <Badge variant="secondary" className="bg-green-100 text-green-700">
-                          <span className="w-2 h-2 rounded-full bg-green-500 mr-1.5" />
+                        <Badge variant="secondary" className="bg-green-100 text-green-700 text-[10px] px-1.5 py-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1" />
                           Ativo
                         </Badge>
                       ) : usuario.invite_token ? (
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-700">
-                          <span className="w-2 h-2 rounded-full bg-amber-500 mr-1.5" />
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1" />
                           Pendente
                         </Badge>
                       ) : (
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-                          <span className="w-2 h-2 rounded-full bg-gray-500 mr-1.5" />
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-[10px] px-1.5 py-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1" />
                           Inativo
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right py-2">
                       {usuario.role !== "owner" && (
                         <PermissionGate permission="gerenciar_usuarios">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreVertical className="h-4 w-4" />
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreVertical className="h-3.5 w-3.5" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => openEditDialog(usuario)}>
-                                <Shield className="h-4 w-4 mr-2" />
+                                <Shield className="h-3.5 w-3.5 mr-2" />
                                 Editar
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -649,18 +632,19 @@ export default function TeamPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between p-4 border-t">
-          <span className="text-sm text-muted-foreground">
-            Mostrando {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredUsuarios.length)} de {filteredUsuarios.length} membros
+        <div className="flex items-center justify-between px-3 py-2 border-t">
+          <span className="text-xs text-muted-foreground">
+            {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredUsuarios.length)} de {filteredUsuarios.length}
           </span>
           <div className="flex items-center gap-1">
             <Button
               variant="outline"
               size="sm"
+              className="h-7 w-7 p-0"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
             {Array.from({ length: Math.min(totalPages, 3) }, (_, i) => {
               const page = i + 1
@@ -669,6 +653,7 @@ export default function TeamPage() {
                   key={page}
                   variant={currentPage === page ? "default" : "outline"}
                   size="sm"
+                  className="h-7 w-7 p-0 text-xs"
                   onClick={() => setCurrentPage(page)}
                 >
                   {page}
@@ -678,10 +663,11 @@ export default function TeamPage() {
             <Button
               variant="outline"
               size="sm"
+              className="h-7 w-7 p-0"
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
@@ -689,31 +675,30 @@ export default function TeamPage() {
 
       {/* Permissions Matrix */}
       <Card>
-        <CardHeader>
-          <CardTitle>Permissoes por Funcao</CardTitle>
-          <p className="text-sm text-muted-foreground">Defina o que cada funcao pode fazer na plataforma.</p>
+        <CardHeader className="py-3 px-4">
+          <CardTitle className="text-sm">Permissoes por Funcao</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="font-medium">Recurso</TableHead>
-                  <TableHead className="font-medium text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Crown className="h-4 w-4 text-amber-500" />
-                      Proprietario
+                  <TableHead className="font-medium text-xs py-2">Recurso</TableHead>
+                  <TableHead className="font-medium text-xs py-2 text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <Crown className="h-3 w-3 text-amber-500" />
+                      Owner
                     </div>
                   </TableHead>
-                  <TableHead className="font-medium text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <ShieldCheck className="h-4 w-4 text-primary" />
+                  <TableHead className="font-medium text-xs py-2 text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <ShieldCheck className="h-3 w-3 text-primary" />
                       Admin
                     </div>
                   </TableHead>
-                  <TableHead className="font-medium text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <User className="h-4 w-4 text-secondary" />
+                  <TableHead className="font-medium text-xs py-2 text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <User className="h-3 w-3 text-secondary" />
                       Membro
                     </div>
                   </TableHead>
@@ -722,35 +707,34 @@ export default function TeamPage() {
               <TableBody>
                 {PERMISSOES_MATRIZ.map((perm, idx) => (
                   <TableRow key={idx} className="hover:bg-muted/50">
-                    <TableCell>
-                      <p className="font-semibold">{perm.recurso}</p>
-                      <p className="text-sm text-muted-foreground">{perm.descricao}</p>
+                    <TableCell className="py-1.5">
+                      <p className="font-medium text-xs">{perm.recurso}</p>
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center py-1.5">
                       {perm.owner === true ? (
-                        <Check className="h-5 w-5 text-accent mx-auto" />
+                        <Check className="h-3.5 w-3.5 text-accent mx-auto" />
                       ) : perm.owner === false ? (
-                        <X className="h-5 w-5 text-destructive mx-auto" />
+                        <X className="h-3.5 w-3.5 text-destructive mx-auto" />
                       ) : (
-                        <span className="text-sm text-muted-foreground">{perm.owner}</span>
+                        <span className="text-[10px] text-muted-foreground">{perm.owner}</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center py-1.5">
                       {perm.admin === true ? (
-                        <Check className="h-5 w-5 text-accent mx-auto" />
+                        <Check className="h-3.5 w-3.5 text-accent mx-auto" />
                       ) : perm.admin === false ? (
-                        <X className="h-5 w-5 text-destructive mx-auto" />
+                        <X className="h-3.5 w-3.5 text-destructive mx-auto" />
                       ) : (
-                        <span className="text-sm text-muted-foreground">{perm.admin}</span>
+                        <span className="text-[10px] text-muted-foreground">{perm.admin}</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center py-1.5">
                       {perm.member === true ? (
-                        <Check className="h-5 w-5 text-accent mx-auto" />
+                        <Check className="h-3.5 w-3.5 text-accent mx-auto" />
                       ) : perm.member === false ? (
-                        <X className="h-5 w-5 text-destructive mx-auto" />
+                        <X className="h-3.5 w-3.5 text-destructive mx-auto" />
                       ) : (
-                        <span className="text-sm text-muted-foreground">{perm.member}</span>
+                        <span className="text-[10px] text-muted-foreground">{perm.member}</span>
                       )}
                     </TableCell>
                   </TableRow>
@@ -762,7 +746,7 @@ export default function TeamPage() {
       </Card>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
+      <footer className="py-3 text-center text-xs text-muted-foreground border-t">
         <p>Copyright &copy; 2025 Sincron Grupos</p>
       </footer>
 

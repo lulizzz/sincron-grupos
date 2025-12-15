@@ -331,93 +331,90 @@ export default function AIPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-64" />
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <Skeleton className="h-10 w-full" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map(i => <Skeleton key={i} className="h-64" />)}
+        <Skeleton className="h-9 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3].map(i => <Skeleton key={i} className="h-52" />)}
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Agentes IA</h2>
-          <p className="text-muted-foreground">Configure e gerencie seus bots de inteligencia artificial.</p>
+          <h2 className="text-lg font-bold text-foreground">Agentes IA</h2>
+          <p className="text-sm text-muted-foreground">Bots de inteligencia artificial</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Bell className="h-4 w-4 text-muted-foreground" />
+        </Button>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="relative max-w-xs w-full">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
-              placeholder="Buscar agentes..."
+              placeholder="Buscar..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="pl-9"
+              className="pl-8 h-9 text-sm"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Status: Todos" />
+            <SelectTrigger className="w-32 h-9 text-sm">
+              <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Status: Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="active">Ativos</SelectItem>
               <SelectItem value="inactive">Inativos</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Agente
+        <Button size="sm" onClick={() => setDialogOpen(true)}>
+          <Plus className="h-3.5 w-3.5 mr-1.5" />
+          Novo
         </Button>
       </div>
 
       {/* Agents Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAgentes.map((agente) => {
           const agentStats = getAgentStats(agente.id)
-          const modeloInfo = MODELOS.find(m => m.value === agente.modelo)
 
           return (
             <Card key={agente.id} className="hover:border-primary transition-colors">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2">
                     <div className={cn(
-                      "p-3 rounded-lg",
+                      "p-2 rounded-lg",
                       agente.ativo ? "bg-primary/10" : "bg-muted"
                     )}>
                       <Bot className={cn(
-                        "h-6 w-6",
+                        "h-4 w-4",
                         agente.ativo ? "text-primary" : "text-muted-foreground"
                       )} />
                     </div>
                     <div>
-                      <h3 className="font-bold">{agente.nome}</h3>
-                      <div className="flex items-center gap-2 mt-1">
+                      <h3 className="font-semibold text-sm">{agente.nome}</h3>
+                      <div className="flex items-center gap-1.5 mt-0.5">
                         <span className={cn(
-                          "w-2 h-2 rounded-full",
+                          "w-1.5 h-1.5 rounded-full",
                           agente.ativo ? "bg-accent" : "bg-muted-foreground"
                         )} />
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-[10px] text-muted-foreground">
                           {agente.ativo ? "Ativo" : "Inativo"}
                         </span>
                       </div>
@@ -425,13 +422,13 @@ export default function AIPage() {
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <MoreVertical className="h-3.5 w-3.5" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleEdit(agente)}>
-                        <Pencil className="h-4 w-4 mr-2" />
+                        <Pencil className="h-3.5 w-3.5 mr-2" />
                         Editar
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleToggle(agente.id, !agente.ativo)}>
@@ -440,7 +437,7 @@ export default function AIPage() {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
-                            <Trash2 className="h-4 w-4 mr-2" />
+                            <Trash2 className="h-3.5 w-3.5 mr-2" />
                             Excluir
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
@@ -466,35 +463,35 @@ export default function AIPage() {
                   </DropdownMenu>
                 </div>
 
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
                   {agente.descricao || "Sem descricao"}
                 </p>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Grupos ativos</span>
-                    <span className="font-semibold">{agente.ativo ? agentStats.gruposAtivos : 0}</span>
+                <div className="space-y-1.5 mb-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Grupos</span>
+                    <span className="font-medium">{agente.ativo ? agentStats.gruposAtivos : 0}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Respostas hoje</span>
-                    <span className="font-semibold">{agente.ativo ? agentStats.respostasHoje : 0}</span>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Respostas</span>
+                    <span className="font-medium">{agente.ativo ? agentStats.respostasHoje : 0}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa de acerto</span>
-                    <span className={cn("font-semibold", agente.ativo ? "text-accent" : "text-muted-foreground")}>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Acerto</span>
+                    <span className={cn("font-medium", agente.ativo ? "text-accent" : "text-muted-foreground")}>
                       {agente.ativo ? `${agentStats.taxaAcerto}%` : "-"}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="flex-1">
-                    <BarChart3 className="h-4 w-4 mr-1" />
+                  <Button variant="secondary" size="sm" className="flex-1 h-8 text-xs">
+                    <BarChart3 className="h-3 w-3 mr-1" />
                     Metricas
                   </Button>
-                  <Button size="sm" className="flex-1" onClick={() => handleEdit(agente)}>
-                    <Settings className="h-4 w-4 mr-1" />
-                    Configurar
+                  <Button size="sm" className="flex-1 h-8 text-xs" onClick={() => handleEdit(agente)}>
+                    <Settings className="h-3 w-3 mr-1" />
+                    Config
                   </Button>
                 </div>
               </CardContent>
@@ -507,93 +504,77 @@ export default function AIPage() {
           className="border-2 border-dashed hover:border-primary transition-colors cursor-pointer"
           onClick={() => setDialogOpen(true)}
         >
-          <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full min-h-[300px]">
-            <div className="bg-muted p-4 rounded-full mb-4">
-              <Plus className="h-8 w-8 text-muted-foreground" />
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center h-full min-h-[220px]">
+            <div className="bg-muted p-3 rounded-full mb-3">
+              <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <h3 className="font-bold mb-2">Criar novo agente</h3>
-            <p className="text-sm text-muted-foreground">Configure um novo bot de IA para seus grupos</p>
+            <h3 className="font-semibold text-sm mb-1">Novo agente</h3>
+            <p className="text-xs text-muted-foreground">Configure um bot de IA</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Performance Section */}
       <Card>
-        <CardHeader>
-          <CardTitle>Performance dos Agentes</CardTitle>
+        <CardHeader className="py-3 px-4">
+          <CardTitle className="text-sm">Performance</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-muted-foreground uppercase">Total de Respostas</span>
-                <MessageSquare className="h-5 w-5 text-muted-foreground" />
+        <CardContent className="pt-0 px-4 pb-4">
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Respostas</span>
+                <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
-              <p className="text-3xl font-bold">{stats.totalRespostas > 1000 ? `${(stats.totalRespostas / 1000).toFixed(1)}k` : stats.totalRespostas}</p>
-              <p className="text-sm text-accent mt-1 flex items-center gap-1">
-                <ArrowUp className="h-3 w-3" />
-                +12% vs. mes anterior
-              </p>
+              <p className="text-xl font-bold">{stats.totalRespostas > 1000 ? `${(stats.totalRespostas / 1000).toFixed(1)}k` : stats.totalRespostas}</p>
             </div>
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-muted-foreground uppercase">Taxa Media de Acerto</span>
-                <Target className="h-5 w-5 text-muted-foreground" />
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Acerto</span>
+                <Target className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
-              <p className="text-3xl font-bold">{stats.taxaMedia}%</p>
-              <p className="text-sm text-accent mt-1 flex items-center gap-1">
-                <ArrowUp className="h-3 w-3" />
-                +2.3% vs. mes anterior
-              </p>
+              <p className="text-xl font-bold">{stats.taxaMedia}%</p>
             </div>
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-muted-foreground uppercase">Agentes Ativos</span>
-                <Bot className="h-5 w-5 text-muted-foreground" />
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Ativos</span>
+                <Bot className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
-              <p className="text-3xl font-bold">{stats.ativos}/{agentes.length}</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {stats.inativos} agente{stats.inativos !== 1 ? 's' : ''} inativo{stats.inativos !== 1 ? 's' : ''}
-              </p>
+              <p className="text-xl font-bold">{stats.ativos}/{agentes.length}</p>
             </div>
           </div>
-
-          {/* Chart Placeholder */}
-          <div className="bg-muted/50 rounded-lg p-8 text-center">
-            <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">Grafico de performance (integrar com biblioteca de graficos)</p>
+          <div className="bg-muted/50 rounded-lg p-4 text-center">
+            <BarChart3 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">Grafico em breve</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Recent Activity Section */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Atividade Recente</CardTitle>
-          <Button variant="link" className="text-primary">Ver todas</Button>
+        <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm">Atividade Recente</CardTitle>
+          <Button variant="link" size="sm" className="text-xs text-primary h-auto p-0">Ver todas</Button>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {ATIVIDADES_RECENTES.map((atividade, idx) => (
-              <div key={atividade.id} className={cn("flex items-start gap-4 pb-4", idx < ATIVIDADES_RECENTES.length - 1 && "border-b")}>
+        <CardContent className="pt-0 px-4 pb-4">
+          <div className="space-y-3">
+            {ATIVIDADES_RECENTES.slice(0, 3).map((atividade, idx) => (
+              <div key={atividade.id} className={cn("flex items-start gap-3 pb-3", idx < 2 && "border-b")}>
                 <div className={cn(
-                  "p-2 rounded-lg shrink-0",
+                  "p-1.5 rounded-lg shrink-0",
                   atividade.tipo === "sucesso" ? "bg-accent/10" : "bg-destructive/10"
                 )}>
                   {atividade.tipo === "sucesso" ? (
-                    <Check className="h-4 w-4 text-accent" />
+                    <Check className="h-3 w-3 text-accent" />
                   ) : (
-                    <AlertCircle className="h-4 w-4 text-destructive" />
+                    <AlertCircle className="h-3 w-3 text-destructive" />
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold">
-                    {atividade.agente} {atividade.tipo === "sucesso" ? "respondeu em" : "nao conseguiu responder"} {atividade.grupo}
+                  <p className="text-xs font-medium">
+                    {atividade.agente} - {atividade.grupo}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {atividade.descricao} - Taxa de confianca: {atividade.confianca}%
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">{atividade.tempo}</p>
+                  <p className="text-[10px] text-muted-foreground">{atividade.tempo}</p>
                 </div>
               </div>
             ))}
@@ -603,48 +584,45 @@ export default function AIPage() {
 
       {/* Training Section */}
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between">
-          <div>
-            <CardTitle>Treinamento dos Agentes</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">Melhore a performance dos seus bots com novos dados</p>
-          </div>
-          <Button>
-            <GraduationCap className="h-4 w-4 mr-2" />
-            Treinar Agentes
+        <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm">Treinamento</CardTitle>
+          <Button size="sm" className="h-8 text-xs">
+            <GraduationCap className="h-3 w-3 mr-1" />
+            Treinar
           </Button>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Database className="h-4 w-4 text-primary" />
-                <span className="font-semibold">Base de conhecimento</span>
+        <CardContent className="pt-0 px-4 pb-4">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Database className="h-3 w-3 text-primary" />
+                <span className="font-medium text-xs">Base</span>
               </div>
-              <p className="text-2xl font-bold mb-1">347</p>
-              <p className="text-xs text-muted-foreground">documentos indexados</p>
+              <p className="text-lg font-bold">347</p>
+              <p className="text-[10px] text-muted-foreground">docs</p>
             </div>
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <MessagesSquare className="h-4 w-4 text-primary" />
-                <span className="font-semibold">Conversas analisadas</span>
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <MessagesSquare className="h-3 w-3 text-primary" />
+                <span className="font-medium text-xs">Conversas</span>
               </div>
-              <p className="text-2xl font-bold mb-1">2,145</p>
-              <p className="text-xs text-muted-foreground">ultimos 30 dias</p>
+              <p className="text-lg font-bold">2.1k</p>
+              <p className="text-[10px] text-muted-foreground">30 dias</p>
             </div>
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Clock className="h-4 w-4 text-primary" />
-                <span className="font-semibold">Ultimo treinamento</span>
+            <div className="bg-muted rounded-lg p-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Clock className="h-3 w-3 text-primary" />
+                <span className="font-medium text-xs">Ultimo</span>
               </div>
-              <p className="text-2xl font-bold mb-1">3 dias</p>
-              <p className="text-xs text-muted-foreground">atras</p>
+              <p className="text-lg font-bold">3d</p>
+              <p className="text-[10px] text-muted-foreground">atras</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
+      <footer className="py-3 text-center text-xs text-muted-foreground border-t">
         <p>Copyright &copy; 2025 Sincron Grupos</p>
       </footer>
 

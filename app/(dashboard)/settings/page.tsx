@@ -16,7 +16,8 @@ import {
   Zap,
   Code,
   Download,
-  Trash2
+  Trash2,
+  Loader2
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -34,6 +35,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
 
 export default function SettingsPage() {
   // Account state
@@ -41,6 +44,12 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("michelle@sincron.com")
   const [phone, setPhone] = useState("+55 11 99999-9999")
   const [role, setRole] = useState("admin")
+
+  // Password state
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
 
   // Security state
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
@@ -63,76 +72,118 @@ export default function SettingsPage() {
   // Organization state
   const [orgName, setOrgName] = useState("Sincron Grupos Ltda")
 
+  // Handle password update
+  const handlePasswordUpdate = async () => {
+    // Validation
+    if (!newPassword || !confirmPassword) {
+      toast.error("Preencha todos os campos de senha")
+      return
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("A nova senha deve ter pelo menos 6 caracteres")
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("As senhas não coincidem")
+      return
+    }
+
+    setIsUpdatingPassword(true)
+
+    try {
+      const supabase = createClient()
+
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      })
+
+      if (error) {
+        throw error
+      }
+
+      toast.success("Senha atualizada com sucesso!")
+      setCurrentPassword("")
+      setNewPassword("")
+      setConfirmPassword("")
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Erro ao atualizar senha"
+      toast.error(errorMessage)
+    } finally {
+      setIsUpdatingPassword(false)
+    }
+  }
+
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Configuracoes</h2>
-        <p className="text-muted-foreground">Gerencie suas preferencias e configuracoes da conta.</p>
+        <h2 className="text-lg font-bold text-foreground">Configuracoes</h2>
+        <p className="text-sm text-muted-foreground">Preferencias e conta</p>
       </div>
 
-      <div className="max-w-4xl space-y-6">
+      <div className="max-w-4xl space-y-4">
         {/* Account Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <User className="h-5 w-5 text-primary" />
-              Informacoes da Conta
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <User className="h-4 w-4 text-primary" />
+              Conta
             </CardTitle>
-            <CardDescription>
-              Gerencie suas informacoes pessoais e de contato.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 pt-6">
+          <CardContent className="space-y-4 p-4">
             {/* Profile Photo */}
-            <div className="flex items-start gap-6">
-              <Avatar className="h-20 w-20 border-2 border-border">
+            <div className="flex items-start gap-4">
+              <Avatar className="h-14 w-14 border-2 border-border">
                 <AvatarImage src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" />
                 <AvatarFallback>MS</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <Label className="mb-2 block font-semibold">Foto de Perfil</Label>
-                <div className="flex items-center gap-3">
-                  <Button size="sm">Alterar Foto</Button>
-                  <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                <Label className="mb-1 block text-sm font-medium">Foto</Label>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" className="h-8 text-xs">Alterar</Button>
+                  <Button variant="ghost" size="sm" className="h-8 text-xs text-destructive hover:text-destructive">
                     Remover
                   </Button>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">JPG, PNG ou GIF. Maximo 2MB.</p>
               </div>
             </div>
 
             {/* Form Fields */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="font-semibold">Nome Completo</Label>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <Label htmlFor="name" className="text-xs font-medium">Nome</Label>
                 <Input
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="h-9 text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email" className="font-semibold">E-mail</Label>
+              <div className="space-y-1">
+                <Label htmlFor="email" className="text-xs font-medium">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="h-9 text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="font-semibold">Telefone</Label>
+              <div className="space-y-1">
+                <Label htmlFor="phone" className="text-xs font-medium">Telefone</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  className="h-9 text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="role" className="font-semibold">Funcao</Label>
+              <div className="space-y-1">
+                <Label htmlFor="role" className="text-xs font-medium">Funcao</Label>
                 <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -144,8 +195,8 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="outline">Cancelar</Button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" size="sm" className="h-8 text-xs">Cancelar</Button>
               <Button>Salvar Alteracoes</Button>
             </div>
           </CardContent>
@@ -153,25 +204,48 @@ export default function SettingsPage() {
 
         {/* Security Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-primary" />
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Shield className="h-4 w-4 text-primary" />
               Seguranca
             </CardTitle>
-            <CardDescription>
-              Gerencie sua senha e configuracoes de autenticacao.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 pt-6">
+          <CardContent className="space-y-4 p-4">
             {/* Password Change */}
             <div>
-              <Label className="mb-2 block font-semibold">Alterar Senha</Label>
-              <div className="space-y-4">
-                <Input type="password" placeholder="Senha atual" />
-                <Input type="password" placeholder="Nova senha" />
-                <Input type="password" placeholder="Confirmar nova senha" />
+              <Label className="mb-2 block text-xs font-medium">Alterar Senha</Label>
+              <div className="space-y-2">
+                <Input
+                  type="password"
+                  placeholder="Senha atual"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="h-9 text-sm"
+                />
+                <Input
+                  type="password"
+                  placeholder="Nova senha (min 6)"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="h-9 text-sm"
+                />
+                <Input
+                  type="password"
+                  placeholder="Confirmar"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="h-9 text-sm"
+                />
               </div>
-              <Button className="mt-4">Atualizar Senha</Button>
+              <Button
+                className="mt-3 h-8 text-xs"
+                size="sm"
+                onClick={handlePasswordUpdate}
+                disabled={isUpdatingPassword}
+              >
+                {isUpdatingPassword && <Loader2 className="mr-1 h-3 w-3 animate-spin" />}
+                Atualizar
+              </Button>
             </div>
 
             <Separator />
@@ -179,10 +253,8 @@ export default function SettingsPage() {
             {/* Two Factor */}
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-semibold">Autenticacao de Dois Fatores</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Adicione uma camada extra de seguranca a sua conta.
-                </p>
+                <h4 className="text-sm font-medium">2FA</h4>
+                <p className="text-xs text-muted-foreground">Seguranca extra</p>
               </div>
               <Switch
                 checked={twoFactorEnabled}
@@ -194,29 +266,29 @@ export default function SettingsPage() {
 
             {/* Active Sessions */}
             <div>
-              <h4 className="mb-3 font-semibold">Sessoes Ativas</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between rounded-lg bg-muted p-4">
-                  <div className="flex items-center gap-3">
-                    <Monitor className="h-6 w-6 text-muted-foreground" />
+              <h4 className="mb-2 text-xs font-medium">Sessoes</h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between rounded-lg bg-muted p-2.5">
+                  <div className="flex items-center gap-2">
+                    <Monitor className="h-4 w-4 text-muted-foreground" />
                     <div>
-                      <p className="font-semibold">Windows - Chrome</p>
-                      <p className="text-sm text-muted-foreground">Sao Paulo, Brasil - Ativo agora</p>
+                      <p className="text-xs font-medium">Windows - Chrome</p>
+                      <p className="text-[10px] text-muted-foreground">Ativo agora</p>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] px-1.5 py-0">
                     Atual
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-4">
-                  <div className="flex items-center gap-3">
-                    <Smartphone className="h-6 w-6 text-muted-foreground" />
+                <div className="flex items-center justify-between rounded-lg bg-muted p-2.5">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="h-4 w-4 text-muted-foreground" />
                     <div>
-                      <p className="font-semibold">iPhone - Safari</p>
-                      <p className="text-sm text-muted-foreground">Sao Paulo, Brasil - 2 horas atras</p>
+                      <p className="text-xs font-medium">iPhone - Safari</p>
+                      <p className="text-[10px] text-muted-foreground">2h atras</p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs text-destructive hover:text-destructive">
                     Encerrar
                   </Button>
                 </div>
@@ -227,71 +299,43 @@ export default function SettingsPage() {
 
         {/* Notifications Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Bell className="h-5 w-5 text-primary" />
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Bell className="h-4 w-4 text-primary" />
               Notificacoes
             </CardTitle>
-            <CardDescription>
-              Configure como e quando voce deseja receber notificacoes.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-0 pt-6">
-            <div className="flex items-center justify-between border-b py-3">
-              <div>
-                <h4 className="font-semibold">Notificacoes por E-mail</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Receba atualizacoes importantes por e-mail.
-                </p>
-              </div>
+          <CardContent className="space-y-0 p-4">
+            <div className="flex items-center justify-between border-b py-2">
+              <span className="text-xs font-medium">E-mail</span>
               <Switch
                 checked={notifications.email}
                 onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
               />
             </div>
-            <div className="flex items-center justify-between border-b py-3">
-              <div>
-                <h4 className="font-semibold">Novas Mensagens</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Notificar quando receber mensagens nos grupos.
-                </p>
-              </div>
+            <div className="flex items-center justify-between border-b py-2">
+              <span className="text-xs font-medium">Mensagens</span>
               <Switch
                 checked={notifications.messages}
                 onCheckedChange={(checked) => setNotifications({...notifications, messages: checked})}
               />
             </div>
-            <div className="flex items-center justify-between border-b py-3">
-              <div>
-                <h4 className="font-semibold">Gatilhos Ativados</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Notificar quando um gatilho for executado.
-                </p>
-              </div>
+            <div className="flex items-center justify-between border-b py-2">
+              <span className="text-xs font-medium">Gatilhos</span>
               <Switch
                 checked={notifications.triggers}
                 onCheckedChange={(checked) => setNotifications({...notifications, triggers: checked})}
               />
             </div>
-            <div className="flex items-center justify-between border-b py-3">
-              <div>
-                <h4 className="font-semibold">Relatorios Semanais</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Receba um resumo semanal de atividades.
-                </p>
-              </div>
+            <div className="flex items-center justify-between border-b py-2">
+              <span className="text-xs font-medium">Relatorios</span>
               <Switch
                 checked={notifications.reports}
                 onCheckedChange={(checked) => setNotifications({...notifications, reports: checked})}
               />
             </div>
-            <div className="flex items-center justify-between py-3">
-              <div>
-                <h4 className="font-semibold">Atualizacoes do Sistema</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Notificar sobre novos recursos e melhorias.
-                </p>
-              </div>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-xs font-medium">Atualizacoes</span>
               <Switch
                 checked={notifications.updates}
                 onCheckedChange={(checked) => setNotifications({...notifications, updates: checked})}
@@ -302,267 +346,194 @@ export default function SettingsPage() {
 
         {/* Preferences Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Sliders className="h-5 w-5 text-primary" />
-              Preferencias do Sistema
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Sliders className="h-4 w-4 text-primary" />
+              Preferencias
             </CardTitle>
-            <CardDescription>
-              Personalize sua experiencia na plataforma.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 pt-6">
-            <div className="space-y-2">
-              <Label htmlFor="language" className="font-semibold">Idioma</Label>
-              <Select value={language} onValueChange={setLanguage}>
-                <SelectTrigger className="w-full md:w-1/2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pt-BR">Portugues (Brasil)</SelectItem>
-                  <SelectItem value="en-US">English (US)</SelectItem>
-                  <SelectItem value="es">Espanol</SelectItem>
-                </SelectContent>
-              </Select>
+          <CardContent className="space-y-4 p-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs font-medium">Idioma</Label>
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pt-BR">Portugues</SelectItem>
+                    <SelectItem value="en-US">English</SelectItem>
+                    <SelectItem value="es">Espanol</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-medium">Fuso</Label>
+                <Select value={timezone} onValueChange={setTimezone}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="America/Sao_Paulo">Sao Paulo</SelectItem>
+                    <SelectItem value="America/New_York">New York</SelectItem>
+                    <SelectItem value="Europe/London">London</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="timezone" className="font-semibold">Fuso Horario</Label>
-              <Select value={timezone} onValueChange={setTimezone}>
-                <SelectTrigger className="w-full md:w-1/2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</SelectItem>
-                  <SelectItem value="America/New_York">America/New_York (GMT-5)</SelectItem>
-                  <SelectItem value="Europe/London">Europe/London (GMT+0)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="dateFormat" className="font-semibold">Formato de Data</Label>
-              <Select value={dateFormat} onValueChange={setDateFormat}>
-                <SelectTrigger className="w-full md:w-1/2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
-                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
-                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-3">
-              <Label className="font-semibold">Tema</Label>
+              <Label className="text-xs font-medium">Tema</Label>
               <RadioGroup value={theme} onValueChange={setTheme} className="flex gap-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="light" id="light" />
-                  <Label htmlFor="light" className="cursor-pointer font-normal">Claro</Label>
+                  <Label htmlFor="light" className="cursor-pointer text-xs font-normal">Claro</Label>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="dark" id="dark" />
-                  <Label htmlFor="dark" className="cursor-pointer font-normal">Escuro</Label>
+                  <Label htmlFor="dark" className="cursor-pointer text-xs font-normal">Escuro</Label>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="auto" id="auto" />
-                  <Label htmlFor="auto" className="cursor-pointer font-normal">Automatico</Label>
+                  <Label htmlFor="auto" className="cursor-pointer text-xs font-normal">Auto</Label>
                 </div>
               </RadioGroup>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="outline">Restaurar Padroes</Button>
-              <Button>Salvar Preferencias</Button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" size="sm" className="h-8 text-xs">Restaurar</Button>
+              <Button size="sm" className="h-8 text-xs">Salvar</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Organization Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Building2 className="h-5 w-5 text-primary" />
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Building2 className="h-4 w-4 text-primary" />
               Organizacao
             </CardTitle>
-            <CardDescription>
-              Informacoes sobre sua organizacao e plano.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 pt-6">
-            <div className="space-y-2">
-              <Label htmlFor="orgName" className="font-semibold">Nome da Organizacao</Label>
+          <CardContent className="space-y-4 p-4">
+            <div className="space-y-1">
+              <Label className="text-xs font-medium">Nome</Label>
               <Input
                 id="orgName"
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
+                className="h-9 text-sm"
               />
             </div>
 
             {/* Plan Info */}
-            <div className="rounded-lg border bg-muted/50 p-4">
-              <div className="flex items-center justify-between">
+            <div className="rounded-lg border bg-muted/50 p-3">
+              <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h4 className="font-semibold">Plano Atual</h4>
-                  <p className="mt-1 text-sm text-muted-foreground">Plano Professional</p>
+                  <h4 className="text-xs font-medium">Plano Professional</h4>
                 </div>
-                <Badge className="bg-primary">Ativo</Badge>
+                <Badge className="bg-primary text-[10px] px-1.5 py-0">Ativo</Badge>
               </div>
-              <Separator className="my-4" />
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
-                  <p className="text-xs text-muted-foreground">Grupos</p>
-                  <p className="text-lg font-bold">47 / 120</p>
+                  <p className="text-[10px] text-muted-foreground">Grupos</p>
+                  <p className="text-sm font-bold">47/120</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Usuarios</p>
-                  <p className="text-lg font-bold">8 / 20</p>
+                  <p className="text-[10px] text-muted-foreground">Usuarios</p>
+                  <p className="text-sm font-bold">8/20</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Renovacao</p>
-                  <p className="text-lg font-bold">15 dias</p>
+                  <p className="text-[10px] text-muted-foreground">Renovacao</p>
+                  <p className="text-sm font-bold">15d</p>
                 </div>
               </div>
-              <Button className="mt-4 w-full">Gerenciar Plano</Button>
+              <Button size="sm" className="mt-3 w-full h-8 text-xs">Gerenciar Plano</Button>
             </div>
 
-            <Separator />
-
             {/* Billing Info */}
-            <div>
-              <h4 className="mb-3 font-semibold">Informacoes de Cobranca</h4>
-              <div className="flex items-center justify-between rounded-lg bg-muted p-4">
-                <div className="flex items-center gap-3">
-                  <CreditCard className="h-6 w-6 text-muted-foreground" />
-                  <div>
-                    <p className="font-semibold">**** **** **** 4242</p>
-                    <p className="text-sm text-muted-foreground">Expira em 12/2025</p>
-                  </div>
+            <div className="flex items-center justify-between rounded-lg bg-muted p-2.5">
+              <div className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="text-xs font-medium">**** 4242</p>
+                  <p className="text-[10px] text-muted-foreground">12/2025</p>
                 </div>
-                <Button variant="ghost" size="sm" className="text-primary hover:text-primary">
-                  Editar
-                </Button>
               </div>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-primary">
+                Editar
+              </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Integrations Section */}
         <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Plug className="h-5 w-5 text-primary" />
+          <CardHeader className="border-b py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Plug className="h-4 w-4 text-primary" />
               Integracoes
             </CardTitle>
-            <CardDescription>
-              Conecte ferramentas externas para expandir funcionalidades.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4 pt-6">
-            {/* Zapier */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500">
-                  <Zap className="h-6 w-6 text-white" />
+          <CardContent className="space-y-2 p-4">
+            <div className="flex items-center justify-between rounded-lg border p-2.5">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-orange-500">
+                  <Zap className="h-4 w-4 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold">Zapier</h4>
-                  <p className="text-sm text-muted-foreground">Automatize fluxos de trabalho com 5000+ apps.</p>
-                </div>
+                <span className="text-xs font-medium">Zapier</span>
               </div>
-              <Button size="sm">Conectar</Button>
+              <Button size="sm" className="h-7 text-xs">Conectar</Button>
             </div>
-
-            {/* Slack */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600">
-                  <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
-                  </svg>
+            <div className="flex items-center justify-between rounded-lg border bg-accent/5 p-2.5">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-accent">
+                  <Code className="h-4 w-4 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold">Slack</h4>
-                  <p className="text-sm text-muted-foreground">Receba notificacoes direto no Slack.</p>
-                </div>
+                <span className="text-xs font-medium">Webhooks (3)</span>
               </div>
-              <Button size="sm">Conectar</Button>
+              <Button variant="outline" size="sm" className="h-7 text-xs">Gerenciar</Button>
             </div>
-
-            {/* Webhooks */}
-            <div className="flex items-center justify-between rounded-lg border bg-accent/5 p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent">
-                  <Code className="h-6 w-6 text-white" />
+            <div className="flex items-center justify-between rounded-lg border p-2.5">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600">
+                  <Key className="h-4 w-4 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold">Webhooks</h4>
-                  <p className="text-sm text-muted-foreground">Conectado - 3 webhooks ativos.</p>
-                </div>
+                <span className="text-xs font-medium">API Keys</span>
               </div>
-              <Button variant="outline" size="sm">Gerenciar</Button>
-            </div>
-
-            {/* API Keys */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600">
-                  <Key className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-semibold">API Keys</h4>
-                  <p className="text-sm text-muted-foreground">Integre com sua propria aplicacao.</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">Ver Chaves</Button>
+              <Button variant="outline" size="sm" className="h-7 text-xs">Ver</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Danger Zone */}
         <Card className="border-2 border-destructive/20">
-          <CardHeader className="border-b border-destructive/20">
-            <CardTitle className="flex items-center gap-2 text-lg text-destructive">
-              <AlertTriangle className="h-5 w-5" />
+          <CardHeader className="border-b border-destructive/20 py-3 px-4">
+            <CardTitle className="flex items-center gap-2 text-sm text-destructive">
+              <AlertTriangle className="h-4 w-4" />
               Zona de Perigo
             </CardTitle>
-            <CardDescription>
-              Acoes irreversiveis que afetam sua conta.
-            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-0 pt-6">
-            <div className="flex items-center justify-between border-b py-3">
-              <div>
-                <h4 className="font-semibold">Exportar Dados</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Baixe uma copia de todos os seus dados.
-                </p>
-              </div>
-              <Button variant="outline" size="sm">
-                <Download className="mr-2 h-4 w-4" />
+          <CardContent className="space-y-0 p-4">
+            <div className="flex items-center justify-between border-b py-2">
+              <span className="text-xs font-medium">Exportar Dados</span>
+              <Button variant="outline" size="sm" className="h-7 text-xs">
+                <Download className="mr-1 h-3 w-3" />
                 Exportar
               </Button>
             </div>
-            <div className="flex items-center justify-between py-3">
-              <div>
-                <h4 className="font-semibold text-destructive">Excluir Conta</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Exclua permanentemente sua conta e todos os dados.
-                </p>
-              </div>
-              <Button variant="destructive" size="sm">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Excluir Conta
+            <div className="flex items-center justify-between py-2">
+              <span className="text-xs font-medium text-destructive">Excluir Conta</span>
+              <Button variant="destructive" size="sm" className="h-7 text-xs">
+                <Trash2 className="mr-1 h-3 w-3" />
+                Excluir
               </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Footer */}
-        <footer className="pb-4 pt-8 text-center text-sm text-muted-foreground">
+        <footer className="pb-3 pt-4 text-center text-xs text-muted-foreground">
           <p>Copyright &copy; 2025 Sincron Grupos</p>
         </footer>
       </div>

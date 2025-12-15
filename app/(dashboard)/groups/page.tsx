@@ -450,61 +450,61 @@ export default function GroupsPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-48" />
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <div className="flex gap-4">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-10 w-48" />
-          <Skeleton className="h-10 w-48" />
+        <div className="flex gap-3">
+          <Skeleton className="h-9 w-52" />
+          <Skeleton className="h-9 w-36" />
+          <Skeleton className="h-9 w-36" />
         </div>
-        <Skeleton className="h-96" />
+        <Skeleton className="h-80" />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Grupos</h2>
-          <p className="text-muted-foreground">Visualize e gerencie seus grupos do WhatsApp.</p>
+          <h2 className="text-lg font-bold text-foreground">Grupos</h2>
+          <p className="text-sm text-muted-foreground">Gerencie grupos do WhatsApp</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Bell className="h-4 w-4 text-muted-foreground" />
           </Button>
           {isConnected && (
-            <Button onClick={() => setDialogOpen(true)}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Sincronizar Grupos
+            <Button size="sm" onClick={() => setDialogOpen(true)}>
+              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+              Sincronizar
             </Button>
           )}
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Buscar por nome..."
+            placeholder="Buscar..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            className="pl-9"
+            className="pl-8 h-9 text-sm"
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Categoria: Todas" />
+          <SelectTrigger className="w-40 h-9 text-sm">
+            <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Categoria: Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             {categorias.map(cat => (
               <SelectItem key={cat.id} value={String(cat.id)}>
                 <div className="flex items-center gap-2">
@@ -516,11 +516,11 @@ export default function GroupsPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Status: Todos" />
+          <SelectTrigger className="w-32 h-9 text-sm">
+            <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Status: Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="active">Ativo</SelectItem>
             <SelectItem value="archived">Arquivado</SelectItem>
           </SelectContent>
@@ -534,11 +534,11 @@ export default function GroupsPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="font-medium">Nome do Grupo</TableHead>
-                  <TableHead className="font-medium">Categorias</TableHead>
-                  <TableHead className="font-medium">Membros</TableHead>
-                  <TableHead className="font-medium">Status</TableHead>
-                  <TableHead className="font-medium text-right">Acoes</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Nome</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Categorias</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Membros</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Status</TableHead>
+                  <TableHead className="font-medium text-xs py-2 text-right">Acoes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -548,35 +548,36 @@ export default function GroupsPage() {
                     className="hover:bg-muted/50 cursor-pointer"
                     onClick={() => handleOpenEditDialog(grupo)}
                   >
-                    <TableCell className="font-medium">{grupo.nome}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-medium text-sm py-2">{grupo.nome}</TableCell>
+                    <TableCell className="py-2">
                       <div className="flex flex-wrap gap-1">
                         {grupo.categorias && grupo.categorias.length > 0 ? (
                           grupo.categorias.map(catId => (
                             <Badge
                               key={catId}
                               variant="secondary"
-                              className="text-xs"
+                              className="text-[10px] px-1.5 py-0"
                               style={{
                                 backgroundColor: getCategoryColor(catId) + "20",
                                 color: getCategoryColor(catId),
                               }}
                             >
                               <span
-                                className="w-1.5 h-1.5 rounded-full mr-1"
+                                className="w-1 h-1 rounded-full mr-1"
                                 style={{ backgroundColor: getCategoryColor(catId) }}
                               />
                               {getCategoryName(catId)}
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-muted-foreground text-sm">-</span>
+                          <span className="text-muted-foreground text-xs">-</span>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>-</TableCell>
-                    <TableCell>
+                    <TableCell className="text-sm py-2">-</TableCell>
+                    <TableCell className="py-2">
                       <Badge variant={grupo.ativo ? "default" : "secondary"} className={cn(
+                        "text-[10px] px-1.5 py-0",
                         grupo.ativo
                           ? "bg-green-100 text-green-800 hover:bg-green-100"
                           : "bg-red-100 text-red-800 hover:bg-red-100"
@@ -584,11 +585,11 @@ export default function GroupsPage() {
                         {grupo.ativo ? "Ativo" : "Arquivado"}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right py-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreVertical className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                            <MoreVertical className="h-3.5 w-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -596,7 +597,7 @@ export default function GroupsPage() {
                             e.stopPropagation()
                             handleOpenEditDialog(grupo)
                           }}>
-                            <Pencil className="h-4 w-4 mr-2" />
+                            <Pencil className="h-3.5 w-3.5 mr-2" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -606,7 +607,7 @@ export default function GroupsPage() {
                             }}
                             className="text-destructive"
                           >
-                            <Trash2 className="h-4 w-4 mr-2" />
+                            <Trash2 className="h-3.5 w-3.5 mr-2" />
                             Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -619,18 +620,19 @@ export default function GroupsPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between p-4 border-t">
-            <span className="text-sm text-muted-foreground">
-              Mostrando {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredGrupos.length)} de {filteredGrupos.length} grupos
+          <div className="flex items-center justify-between px-3 py-2 border-t">
+            <span className="text-xs text-muted-foreground">
+              {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredGrupos.length)} de {filteredGrupos.length}
             </span>
             <div className="flex items-center gap-1">
               <Button
                 variant="outline"
                 size="sm"
+                className="h-7 w-7 p-0"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-3.5 w-3.5" />
               </Button>
               {Array.from({ length: Math.min(totalPages, 3) }, (_, i) => {
                 const page = i + 1
@@ -639,6 +641,7 @@ export default function GroupsPage() {
                     key={page}
                     variant={currentPage === page ? "default" : "outline"}
                     size="sm"
+                    className="h-7 w-7 p-0 text-xs"
                     onClick={() => setCurrentPage(page)}
                   >
                     {page}
@@ -648,35 +651,36 @@ export default function GroupsPage() {
               <Button
                 variant="outline"
                 size="sm"
+                className="h-7 w-7 p-0"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
         </Card>
       ) : (
-        <Card className="p-12">
+        <Card className="p-8">
           <div className="text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="h-8 w-8 text-muted-foreground" />
+            <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+              <Users className="h-5 w-5 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum grupo cadastrado</h3>
-            <p className="text-muted-foreground mb-6">
+            <h3 className="text-sm font-semibold mb-1">Nenhum grupo cadastrado</h3>
+            <p className="text-xs text-muted-foreground mb-4">
               {isConnected
                 ? "Adicione grupos do WhatsApp para gerencia-los"
                 : "Conecte uma instancia WhatsApp primeiro"}
             </p>
             {isConnected ? (
-              <Button onClick={() => setDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button size="sm" onClick={() => setDialogOpen(true)}>
+                <Plus className="h-3.5 w-3.5 mr-1.5" />
                 Adicionar Grupos
               </Button>
             ) : (
-              <Button asChild>
+              <Button size="sm" asChild>
                 <Link href="/instances">
-                  <Smartphone className="h-4 w-4 mr-2" />
+                  <Smartphone className="h-3.5 w-3.5 mr-1.5" />
                   Ver Instancias
                 </Link>
               </Button>
@@ -686,7 +690,7 @@ export default function GroupsPage() {
       )}
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
+      <footer className="py-3 text-center text-xs text-muted-foreground border-t">
         <p>Copyright &copy; 2025 Sincron Grupos</p>
       </footer>
 

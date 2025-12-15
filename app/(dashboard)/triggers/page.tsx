@@ -301,66 +301,64 @@ export default function TriggersPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-64" />
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-4 w-48" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} className="h-24" />
+            <Skeleton key={i} className="h-20" />
           ))}
         </div>
-        <Skeleton className="h-96" />
+        <Skeleton className="h-72" />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Gatilhos</h2>
-          <p className="text-muted-foreground">Crie automacoes que respondem a eventos especificos no WhatsApp.</p>
+          <h2 className="text-lg font-bold text-foreground">Gatilhos</h2>
+          <p className="text-sm text-muted-foreground">Automacoes WhatsApp</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Bell className="h-4 w-4 text-muted-foreground" />
+        </Button>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
-          <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 flex-1">
+          <div className="relative max-w-xs w-full">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
-              placeholder="Buscar gatilhos..."
+              placeholder="Buscar..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="pl-9"
+              className="pl-8 h-9 text-sm"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Status: Todos" />
+            <SelectTrigger className="w-32 h-9 text-sm">
+              <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Status: Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="active">Ativos</SelectItem>
               <SelectItem value="paused">Pausados</SelectItem>
             </SelectContent>
           </Select>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Categoria: Todas" />
+            <SelectTrigger className="w-36 h-9 text-sm">
+              <SelectValue placeholder="Categoria" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Categoria: Todas</SelectItem>
+              <SelectItem value="all">Todas</SelectItem>
               {categorias.map(cat => (
                 <SelectItem key={cat.id} value={String(cat.id)}>
                   <div className="flex items-center gap-2">
@@ -372,58 +370,50 @@ export default function TriggersPage() {
             </SelectContent>
           </Select>
         </div>
-        <Button asChild>
+        <Button size="sm" asChild>
           <Link href="/triggers/new">
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Gatilho
+            <Plus className="h-3.5 w-3.5 mr-1.5" />
+            Novo
           </Link>
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground">ATIVOS</span>
-              <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
-                <Check className="h-4 w-4 text-accent" />
-              </div>
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Ativos</span>
+              <Check className="h-4 w-4 text-accent" />
             </div>
-            <p className="text-3xl font-bold">{stats.ativos}</p>
+            <p className="text-xl font-bold">{stats.ativos}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground">PAUSADOS</span>
-              <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-                <Pause className="h-4 w-4 text-secondary" />
-              </div>
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Pausados</span>
+              <Pause className="h-4 w-4 text-secondary" />
             </div>
-            <p className="text-3xl font-bold">{stats.pausados}</p>
+            <p className="text-xl font-bold">{stats.pausados}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground">EXECUCOES (30d)</span>
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Zap className="h-4 w-4 text-primary" />
-              </div>
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Execucoes</span>
+              <Zap className="h-4 w-4 text-primary" />
             </div>
-            <p className="text-3xl font-bold">{stats.execucoes > 1000 ? `${(stats.execucoes / 1000).toFixed(1)}k` : stats.execucoes}</p>
+            <p className="text-xl font-bold">{stats.execucoes > 1000 ? `${(stats.execucoes / 1000).toFixed(1)}k` : stats.execucoes}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-muted-foreground">GRUPOS COM GATILHOS</span>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </div>
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground">Grupos</span>
+              <Users className="h-4 w-4 text-muted-foreground" />
             </div>
-            <p className="text-3xl font-bold">{stats.gruposComGatilhos}</p>
+            <p className="text-xl font-bold">{stats.gruposComGatilhos}</p>
           </CardContent>
         </Card>
       </div>
@@ -435,13 +425,12 @@ export default function TriggersPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="font-medium">Nome</TableHead>
-                  <TableHead className="font-medium">Evento</TableHead>
-                  <TableHead className="font-medium">Acao</TableHead>
-                  <TableHead className="font-medium">Grupos</TableHead>
-                  <TableHead className="font-medium">Status</TableHead>
-                  <TableHead className="font-medium">Execucoes</TableHead>
-                  <TableHead className="font-medium text-center"></TableHead>
+                  <TableHead className="font-medium text-xs py-2">Nome</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Evento</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Acao</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Grupos</TableHead>
+                  <TableHead className="font-medium text-xs py-2">Status</TableHead>
+                  <TableHead className="font-medium text-xs py-2 text-right">Acoes</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -450,105 +439,88 @@ export default function TriggersPage() {
                   const acaoInfo = TIPO_ACAO_LABELS[gatilho.tipo_acao] || { label: gatilho.tipo_acao, icon: Zap, bgColor: "bg-muted" }
                   const EventoIcon = eventoInfo.icon
                   const AcaoIcon = acaoInfo.icon
-                  const execucoes = Math.floor(Math.random() * 1500) // Placeholder
 
                   return (
                     <TableRow key={gatilho.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div>
-                          <p className="font-semibold">{gatilho.nome}</p>
-                          {gatilho.descricao && (
-                            <p className="text-sm text-muted-foreground">{gatilho.descricao}</p>
-                          )}
-                        </div>
+                      <TableCell className="py-2">
+                        <p className="font-medium text-sm">{gatilho.nome}</p>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", eventoInfo.bgColor)}>
-                            <EventoIcon className="h-4 w-4 text-primary" />
+                      <TableCell className="py-2">
+                        <div className="flex items-center gap-1.5">
+                          <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", eventoInfo.bgColor)}>
+                            <EventoIcon className="h-3 w-3 text-primary" />
                           </div>
-                          <span className="text-sm">{eventoInfo.label}</span>
+                          <span className="text-xs">{eventoInfo.label}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", acaoInfo.bgColor)}>
-                            <AcaoIcon className="h-4 w-4 text-accent" />
+                      <TableCell className="py-2">
+                        <div className="flex items-center gap-1.5">
+                          <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", acaoInfo.bgColor)}>
+                            <AcaoIcon className="h-3 w-3 text-accent" />
                           </div>
-                          <span className="text-sm">{acaoInfo.label}</span>
+                          <span className="text-xs">{acaoInfo.label}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {gatilho.categorias ? (
-                            <>
-                              <Badge
-                                variant="secondary"
-                                className="text-xs"
-                                style={{
-                                  backgroundColor: gatilho.categorias.cor + "20",
-                                  color: gatilho.categorias.cor,
-                                }}
-                              >
-                                {gatilho.categorias.nome}
-                              </Badge>
-                              <Badge variant="secondary" className="text-xs bg-secondary/10 text-secondary">
-                                +{Math.floor(Math.random() * 5) + 1}
-                              </Badge>
-                            </>
-                          ) : gatilho.grupos ? (
-                            <Badge variant="secondary" className="text-xs">
-                              {gatilho.grupos.nome}
-                            </Badge>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">Todos</span>
-                          )}
-                        </div>
+                      <TableCell className="py-2">
+                        {gatilho.categorias ? (
+                          <Badge
+                            variant="secondary"
+                            className="text-[10px] px-1.5 py-0"
+                            style={{
+                              backgroundColor: gatilho.categorias.cor + "20",
+                              color: gatilho.categorias.cor,
+                            }}
+                          >
+                            {gatilho.categorias.nome}
+                          </Badge>
+                        ) : gatilho.grupos ? (
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                            {gatilho.grupos.nome}
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Todos</span>
+                        )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="py-2">
                         {gatilho.ativo ? (
-                          <Badge variant="secondary" className="bg-accent/10 text-accent">
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent mr-1.5" />
+                          <Badge variant="secondary" className="bg-accent/10 text-accent text-[10px] px-1.5 py-0">
+                            <span className="w-1 h-1 rounded-full bg-accent mr-1" />
                             Ativo
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-secondary/10 text-secondary">
-                            <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5" />
+                          <Badge variant="secondary" className="bg-secondary/10 text-secondary text-[10px] px-1.5 py-0">
+                            <span className="w-1 h-1 rounded-full bg-secondary mr-1" />
                             Pausado
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell>
-                        <p className="font-semibold">{execucoes > 1000 ? `${(execucoes / 1000).toFixed(1)}k` : execucoes}</p>
-                        <p className="text-xs text-muted-foreground">ultimos 30 dias</p>
-                      </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-right py-2">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreVertical className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-7 w-7">
+                              <MoreVertical className="h-3.5 w-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
                               <Link href={`/triggers/${gatilho.id}/edit`}>
-                                <Pencil className="h-4 w-4 mr-2" />
+                                <Pencil className="h-3.5 w-3.5 mr-2" />
                                 Editar
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleDuplicate(gatilho)}>
-                              <Copy className="h-4 w-4 mr-2" />
+                              <Copy className="h-3.5 w-3.5 mr-2" />
                               Duplicar
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleToggle(gatilho.id, !gatilho.ativo)}>
                               {gatilho.ativo ? (
                                 <>
-                                  <Pause className="h-4 w-4 mr-2" />
+                                  <Pause className="h-3.5 w-3.5 mr-2" />
                                   Pausar
                                 </>
                               ) : (
                                 <>
-                                  <Check className="h-4 w-4 mr-2" />
+                                  <Check className="h-3.5 w-3.5 mr-2" />
                                   Ativar
                                 </>
                               )}
@@ -559,7 +531,7 @@ export default function TriggersPage() {
                                   onSelect={(e) => e.preventDefault()}
                                   className="text-destructive"
                                 >
-                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  <Trash2 className="h-3.5 w-3.5 mr-2" />
                                   Excluir
                                 </DropdownMenuItem>
                               </AlertDialogTrigger>
@@ -567,7 +539,7 @@ export default function TriggersPage() {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Excluir gatilho?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Esta acao nao pode ser desfeita. O gatilho "{gatilho.nome}" sera removido permanentemente.
+                                    Esta acao nao pode ser desfeita.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -592,18 +564,19 @@ export default function TriggersPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between p-4 border-t">
-            <span className="text-sm text-muted-foreground">
-              Mostrando {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredGatilhos.length)} de {filteredGatilhos.length} gatilhos
+          <div className="flex items-center justify-between px-3 py-2 border-t">
+            <span className="text-xs text-muted-foreground">
+              {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredGatilhos.length)} de {filteredGatilhos.length}
             </span>
             <div className="flex items-center gap-1">
               <Button
                 variant="outline"
                 size="sm"
+                className="h-7 w-7 p-0"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-3.5 w-3.5" />
               </Button>
               {Array.from({ length: Math.min(totalPages, 3) }, (_, i) => {
                 const page = i + 1
@@ -612,6 +585,7 @@ export default function TriggersPage() {
                     key={page}
                     variant={currentPage === page ? "default" : "outline"}
                     size="sm"
+                    className="h-7 w-7 p-0 text-xs"
                     onClick={() => setCurrentPage(page)}
                   >
                     {page}
@@ -621,28 +595,29 @@ export default function TriggersPage() {
               <Button
                 variant="outline"
                 size="sm"
+                className="h-7 w-7 p-0"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages || totalPages === 0}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
         </Card>
       ) : (
-        <Card className="p-12">
+        <Card className="p-8">
           <div className="text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Zap className="h-8 w-8 text-muted-foreground" />
+            <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+              <Zap className="h-5 w-5 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum gatilho configurado</h3>
-            <p className="text-muted-foreground mb-6">
-              Crie automacoes para responder a eventos nos seus grupos WhatsApp
+            <h3 className="text-sm font-semibold mb-1">Nenhum gatilho</h3>
+            <p className="text-xs text-muted-foreground mb-4">
+              Crie automacoes para seus grupos
             </p>
-            <Button asChild>
+            <Button size="sm" asChild>
               <Link href="/triggers/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Criar Gatilho
+                <Plus className="h-3.5 w-3.5 mr-1.5" />
+                Criar
               </Link>
             </Button>
           </div>
@@ -650,7 +625,7 @@ export default function TriggersPage() {
       )}
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
+      <footer className="py-3 text-center text-xs text-muted-foreground border-t">
         <p>Copyright &copy; 2025 Sincron Grupos</p>
       </footer>
     </div>
