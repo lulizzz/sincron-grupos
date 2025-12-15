@@ -91,19 +91,19 @@ interface Grupo {
 
 interface MensagemProgramada {
   id: number
-  titulo?: string
   tipo_mensagem: TipoMensagem
   conteudo_texto: string | null
   url_midia: string | null
   nome_arquivo: string | null
   grupos_ids: number[] | null
   categoria_id: number | null
-  enviar_agora: boolean
+  enviar_agora: boolean | null
   dt_agendamento: string | null
-  status: StatusMensagem
+  status: string | null
   dt_enviado: string | null
   erro_mensagem: string | null
-  dt_create: string
+  dt_create: string | null
+  criado_por: number | null
 }
 
 const TIPOS_MENSAGEM = [
@@ -130,7 +130,6 @@ export default function MessagesPage() {
   const [saving, setSaving] = useState(false)
 
   // Form state
-  const [tituloMensagem, setTituloMensagem] = useState("")
   const [tipoMensagem, setTipoMensagem] = useState<TipoMensagem>("texto")
   const [tipoDestinatario, setTipoDestinatario] = useState<TipoDestinatario>("grupos")
   const [gruposSelecionados, setGruposSelecionados] = useState<Set<number>>(new Set())
@@ -157,7 +156,6 @@ export default function MessagesPage() {
   const filteredMensagens = useMemo(() => {
     return mensagens.filter(m => {
       const matchesSearch = !searchFilter ||
-        (m.titulo?.toLowerCase().includes(searchFilter.toLowerCase())) ||
         (m.conteudo_texto?.toLowerCase().includes(searchFilter.toLowerCase()))
 
       let matchesTab = true
@@ -248,7 +246,6 @@ export default function MessagesPage() {
   }, [loadData])
 
   const resetForm = () => {
-    setTituloMensagem("")
     setTipoMensagem("texto")
     setTipoDestinatario("grupos")
     setGruposSelecionados(new Set())
@@ -325,7 +322,6 @@ export default function MessagesPage() {
         .from("mensagens_programadas")
         .insert({
           id_organizacao: usuarioSistema.id_organizacao,
-          titulo: tituloMensagem || null,
           tipo_mensagem: tipoMensagem,
           conteudo_texto: tipoMensagem === "texto" ? conteudoTexto : legendaMidia || null,
           url_midia: tipoMensagem !== "texto" ? urlMidia : null,
@@ -639,10 +635,10 @@ export default function MessagesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold">{msg.titulo || "Mensagem agendada"}</h4>
+                          <h4 className="font-semibold">Mensagem agendada</h4>
                           <Badge variant="secondary" className="bg-accent/10 text-accent text-xs">Agendada</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2 line-clamp-1">
+                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                           {msg.conteudo_texto || "-"}
                         </p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -710,10 +706,10 @@ export default function MessagesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold">{msg.titulo || "Mensagem enviada"}</h4>
+                          <h4 className="font-semibold">Mensagem enviada</h4>
                           <Badge variant="secondary" className="bg-accent/10 text-accent text-xs">Enviada</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2 line-clamp-1">
+                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                           {msg.conteudo_texto || "-"}
                         </p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -768,10 +764,10 @@ export default function MessagesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold">{msg.titulo || "Rascunho"}</h4>
+                          <h4 className="font-semibold">Rascunho</h4>
                           <Badge variant="secondary" className="text-xs">Rascunho</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2 line-clamp-1">
+                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                           {msg.conteudo_texto || "-"}
                         </p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -837,16 +833,6 @@ export default function MessagesPage() {
           </DialogHeader>
 
           <div className="space-y-5">
-            {/* Titulo */}
-            <div className="space-y-2">
-              <Label>Titulo da Mensagem</Label>
-              <Input
-                placeholder="Ex: Promocao Black Friday"
-                value={tituloMensagem}
-                onChange={(e) => setTituloMensagem(e.target.value)}
-              />
-            </div>
-
             {/* Conteudo */}
             <div className="space-y-2">
               <Label>Conteudo da Mensagem</Label>
