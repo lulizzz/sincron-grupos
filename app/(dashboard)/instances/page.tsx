@@ -229,15 +229,15 @@ export default function InstancesPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-32" />
+          <div className="space-y-1">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-3 w-24" />
           </div>
         </div>
-        <Skeleton className="h-64" />
-        <Skeleton className="h-48" />
+        <Skeleton className="h-32" />
+        <Skeleton className="h-24" />
       </div>
     )
   }
@@ -245,30 +245,31 @@ export default function InstancesPage() {
   const isConnected = instanciaPrincipal?.status === "conectado"
 
   return (
-    <div className="flex-1 space-y-8 p-8">
+    <div className="flex-1 space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Instancias WhatsApp</h2>
-          <p className="text-muted-foreground">Gerencie suas conexoes com o WhatsApp.</p>
+          <h2 className="text-lg font-semibold text-foreground">Instancias WhatsApp</h2>
+          <p className="text-sm text-muted-foreground">Gerencie suas conexoes.</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Bell className="h-4 w-4 text-muted-foreground" />
           </Button>
           <Button
             variant="outline"
             size="icon"
+            className="h-8 w-8"
             onClick={checkAllStatuses}
             disabled={isRefreshing}
           >
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+            <RefreshCw className={cn("h-3.5 w-3.5", isRefreshing && "animate-spin")} />
           </Button>
           {instancias.length === 0 && (
-            <Button asChild>
+            <Button size="sm" className="h-8" asChild>
               <Link href="/instances/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Nova Instancia
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Nova
               </Link>
             </Button>
           )}
@@ -279,102 +280,92 @@ export default function InstancesPage() {
         <>
           {/* Instance Card */}
           <Card>
-            <div className="p-6 border-b">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
                   <div className={cn(
-                    "w-14 h-14 rounded-full flex items-center justify-center",
+                    "w-10 h-10 rounded-full flex items-center justify-center",
                     isConnected ? "bg-green-100" : "bg-muted"
                   )}>
                     <Smartphone className={cn(
-                      "h-7 w-7",
+                      "h-5 w-5",
                       isConnected ? "text-green-600" : "text-muted-foreground"
                     )} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold">{instanciaPrincipal.nome_instancia}</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <h3 className="text-sm font-semibold">{instanciaPrincipal.nome_instancia}</h3>
+                    <p className="text-xs text-muted-foreground">
                       {instanciaPrincipal.liveStatus?.phoneFormatted ||
                        instanciaPrincipal.numero_telefone ||
                        "Numero nao disponivel"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <Badge className={cn(
-                    "gap-2",
+                    "gap-1 text-xs h-6",
                     isConnected
                       ? "bg-green-100 text-green-700 hover:bg-green-100"
                       : "bg-muted text-muted-foreground hover:bg-muted"
                   )}>
                     <span className={cn(
-                      "w-2 h-2 rounded-full",
+                      "w-1.5 h-1.5 rounded-full",
                       isConnected ? "bg-green-500 animate-pulse" : "bg-muted-foreground"
                     )} />
-                    {isConnected ? "Conectada" : "Desconectada"}
+                    {isConnected ? "Online" : "Offline"}
                   </Badge>
                   {instanciaPrincipal.isChecking && (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
                   )}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <MoreVertical className="h-3.5 w-3.5" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`/instances/${instanciaPrincipal.id}`}>
-                          Configuracoes
-                        </Link>
+                        <Link href={`/instances/${instanciaPrincipal.id}`}>Configuracoes</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">
-                        Desconectar
-                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-destructive">Desconectar</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
               </div>
-            </div>
-            <CardContent className="p-6">
+
               {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-2xl font-bold">{stats.grupos}</p>
-                  <p className="text-sm text-muted-foreground">Grupos</p>
+              <div className="grid grid-cols-4 gap-2">
+                <div className="text-center p-2 bg-muted rounded">
+                  <p className="text-lg font-bold">{stats.grupos}</p>
+                  <p className="text-xs text-muted-foreground">Grupos</p>
                 </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-2xl font-bold">{stats.gatilhos}</p>
-                  <p className="text-sm text-muted-foreground">Gatilhos ativos</p>
+                <div className="text-center p-2 bg-muted rounded">
+                  <p className="text-lg font-bold">{stats.gatilhos}</p>
+                  <p className="text-xs text-muted-foreground">Gatilhos</p>
                 </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-2xl font-bold">0</p>
-                  <p className="text-sm text-muted-foreground">Mensagens hoje</p>
+                <div className="text-center p-2 bg-muted rounded">
+                  <p className="text-lg font-bold">0</p>
+                  <p className="text-xs text-muted-foreground">Msgs hoje</p>
                 </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-2xl font-bold">{isConnected ? "99.9%" : "0%"}</p>
-                  <p className="text-sm text-muted-foreground">Uptime</p>
+                <div className="text-center p-2 bg-muted rounded">
+                  <p className="text-lg font-bold">{isConnected ? "99%" : "0%"}</p>
+                  <p className="text-xs text-muted-foreground">Uptime</p>
                 </div>
               </div>
 
-              <Separator className="my-6" />
-
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="text-sm text-muted-foreground">
-                  <span>Ultima atividade: </span>
-                  <span className="font-medium text-foreground">
-                    {isConnected ? "Agora mesmo" : "Desconectada"}
-                  </span>
-                </div>
-                <div className="flex gap-3">
-                  <Button variant="outline" onClick={checkAllStatuses} disabled={isRefreshing}>
-                    <RefreshCw className={cn("h-4 w-4 mr-2", isRefreshing && "animate-spin")} />
+              <div className="flex items-center justify-between mt-4 pt-3 border-t">
+                <span className="text-xs text-muted-foreground">
+                  {isConnected ? "Conectada agora" : "Desconectada"}
+                </span>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="h-7 text-xs" onClick={checkAllStatuses} disabled={isRefreshing}>
+                    <RefreshCw className={cn("h-3 w-3 mr-1", isRefreshing && "animate-spin")} />
                     Reconectar
                   </Button>
                   {isConnected && (
-                    <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">
-                      <Power className="h-4 w-4 mr-2" />
+                    <Button size="sm" variant="outline" className="h-7 text-xs border-destructive text-destructive hover:bg-destructive/10">
+                      <Power className="h-3 w-3 mr-1" />
                       Desconectar
                     </Button>
                   )}
@@ -386,47 +377,34 @@ export default function InstancesPage() {
           {/* QR Code Section (when disconnected) */}
           {!isConnected && (
             <Card>
-              <div className="p-6 border-b">
-                <h3 className="text-lg font-bold flex items-center gap-2">
-                  <QrCode className="h-5 w-5 text-primary" />
-                  Conectar WhatsApp
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Escaneie o QR Code com seu WhatsApp para conectar.
-                </p>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="w-64 h-64 rounded-lg flex items-center justify-center border-2 border-dashed border-border bg-muted/50">
-                    <div className="text-center">
-                      <QrCode className="h-16 w-16 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">QR Code</p>
-                    </div>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <QrCode className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-semibold">Conectar WhatsApp</h3>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-32 h-32 rounded flex items-center justify-center border-2 border-dashed border-border bg-muted/50 flex-shrink-0">
+                    <QrCode className="h-10 w-10 text-muted-foreground" />
                   </div>
-                  <div className="flex-1 space-y-4">
-                    <h4 className="font-semibold">Como conectar:</h4>
-                    <ol className="space-y-3 text-sm text-muted-foreground">
-                      <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
-                        <span>Abra o WhatsApp no seu celular</span>
+                  <div className="flex-1 space-y-2">
+                    <ol className="space-y-1 text-xs text-muted-foreground">
+                      <li className="flex items-center gap-2">
+                        <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">1</span>
+                        Abra o WhatsApp no celular
                       </li>
-                      <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
-                        <span>Toque em <strong>Menu</strong> ou <strong>Configuracoes</strong> e selecione <strong>Aparelhos conectados</strong></span>
+                      <li className="flex items-center gap-2">
+                        <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">2</span>
+                        Menu → Aparelhos conectados
                       </li>
-                      <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
-                        <span>Toque em <strong>Conectar um aparelho</strong></span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
-                        <span>Aponte seu celular para esta tela para escanear o QR Code</span>
+                      <li className="flex items-center gap-2">
+                        <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">3</span>
+                        Conectar aparelho → Escanear QR
                       </li>
                     </ol>
-                    <Button asChild className="mt-4">
+                    <Button size="sm" className="h-7 text-xs mt-2" asChild>
                       <Link href={`/instances/${instanciaPrincipal.id}/connect`}>
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Gerar novo QR Code
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Gerar QR Code
                       </Link>
                     </Button>
                   </div>
@@ -437,61 +415,33 @@ export default function InstancesPage() {
 
           {/* Instance Info */}
           <Card>
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-bold flex items-center gap-2">
-                <Info className="h-5 w-5 text-primary" />
-                Informacoes da Instancia
-              </h3>
-            </div>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Nome da Instancia</label>
-                    <p className="font-medium">{instanciaPrincipal.nome_instancia}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Numero WhatsApp</label>
-                    <p className="font-medium">
-                      {instanciaPrincipal.liveStatus?.phoneFormatted ||
-                       instanciaPrincipal.numero_telefone ||
-                       "Nao conectado"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Status</label>
-                    <p className={cn(
-                      "font-medium flex items-center gap-2",
-                      isConnected ? "text-green-600" : "text-muted-foreground"
-                    )}>
-                      <span className={cn(
-                        "w-2 h-2 rounded-full",
-                        isConnected ? "bg-green-500" : "bg-muted-foreground"
-                      )} />
-                      {isConnected ? "Conectada" : "Desconectada"}
-                    </p>
-                  </div>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Info className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold">Informacoes da Instancia</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="text-xs text-muted-foreground">Nome</label>
+                  <p className="text-sm font-medium">{instanciaPrincipal.nome_instancia}</p>
                 </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Criada em</label>
-                    <p className="font-medium">{formatDate(instanciaPrincipal.dt_create)}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Ultima conexao</label>
-                    <p className="font-medium">
-                      {isConnected ? "Agora (ativa)" : formatDate(instanciaPrincipal.dt_update)}
-                    </p>
-                  </div>
-                  {instanciaPrincipal.liveStatus?.isBusiness && (
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Tipo de Conta</label>
-                      <p className="font-medium flex items-center gap-2">
-                        <Building2 className="h-4 w-4 text-blue-500" />
-                        WhatsApp Business
-                      </p>
-                    </div>
-                  )}
+                <div>
+                  <label className="text-xs text-muted-foreground">Numero</label>
+                  <p className="text-sm font-medium">
+                    {instanciaPrincipal.liveStatus?.phoneFormatted ||
+                     instanciaPrincipal.numero_telefone ||
+                     "-"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground">Criada em</label>
+                  <p className="text-sm font-medium">{formatDate(instanciaPrincipal.dt_create)}</p>
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground">Ultima atividade</label>
+                  <p className="text-sm font-medium">
+                    {isConnected ? "Agora" : formatDate(instanciaPrincipal.dt_update)}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -499,28 +449,28 @@ export default function InstancesPage() {
         </>
       ) : (
         /* Empty State */
-        <Card className="p-12">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Smartphone className="h-8 w-8 text-muted-foreground" />
+        <Card>
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+              <Smartphone className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhuma instancia</h3>
-            <p className="text-muted-foreground mb-6">
-              Conecte seu primeiro WhatsApp para comecar a gerenciar grupos
+            <h3 className="text-sm font-semibold mb-1">Nenhuma instancia</h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              Conecte seu WhatsApp para comecar
             </p>
-            <Button asChild>
+            <Button size="sm" className="h-7 text-xs" asChild>
               <Link href="/instances/new">
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-3 w-3 mr-1" />
                 Nova Instancia
               </Link>
             </Button>
-          </div>
+          </CardContent>
         </Card>
       )}
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
-        <p>Copyright &copy; 2025 Sincron Grupos</p>
+      <footer className="py-2 text-center text-xs text-muted-foreground">
+        <p>&copy; 2025 Sincron Grupos</p>
       </footer>
     </div>
   )

@@ -113,44 +113,44 @@ export function CommandCenter() {
 
   if (loading) {
     return (
-      <div className="flex-1 space-y-6 p-8">
+      <div className="flex-1 space-y-4 p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-48" />
+          <div className="space-y-1">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-3 w-36" />
           </div>
         </div>
-        <Skeleton className="h-48" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton key={i} className="h-32" />
+            <Skeleton key={i} className="h-20" />
           ))}
         </div>
-        <Skeleton className="h-32" />
-        <Skeleton className="h-64" />
+        <Skeleton className="h-12" />
+        <Skeleton className="h-24" />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 space-y-8 p-8 animate-fade-in">
+    <div className="flex-1 space-y-4 p-4 md:p-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
-          <p className="text-muted-foreground">Visao geral da sua organizacao.</p>
+          <h2 className="text-lg font-semibold text-foreground">Dashboard</h2>
+          <p className="text-sm text-muted-foreground">Visao geral da sua organizacao.</p>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5 text-muted-foreground" />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Bell className="h-4 w-4 text-muted-foreground" />
           </Button>
           <Button
             variant="outline"
             size="icon"
+            className="h-8 w-8"
             onClick={handleRefresh}
             disabled={isRefreshing}
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
           </Button>
         </div>
       </div>
@@ -158,197 +158,144 @@ export function CommandCenter() {
       {/* Onboarding Checklist */}
       {onboardingProgress.completed < 4 && (
         <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center">
               <div>
-                <h3 className="text-lg font-semibold">Bem-vindo ao Sincron Grupos</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Complete os passos para comecar a usar a plataforma.
-                </p>
+                <h3 className="text-sm font-semibold">Bem-vindo ao Sincron Grupos</h3>
+                <p className="text-xs text-muted-foreground">Complete os passos para comecar.</p>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-primary">
-                  Progresso: {onboardingProgress.completed}/{onboardingProgress.total}
-                </p>
-                <Progress value={onboardingProgress.percentage} className="w-32 h-2 mt-2" />
+              <div className="flex items-center gap-3">
+                <Progress value={onboardingProgress.percentage} className="w-24 h-1.5" />
+                <span className="text-xs font-medium text-primary">{onboardingProgress.completed}/4</span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className={`flex items-start gap-4 ${stats.instanciasConectadas > 0 ? "" : "opacity-60"}`}>
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 mt-1 ${
-                  stats.instanciasConectadas > 0
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card border-2 border-border text-muted-foreground"
+            <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className={`flex items-center gap-2 p-2 rounded-lg bg-muted/50 ${stats.instanciasConectadas > 0 ? "" : "opacity-60"}`}>
+                <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                  stats.instanciasConectadas > 0 ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"
                 }`}>
-                  {stats.instanciasConectadas > 0 ? <Check className="h-4 w-4" /> : "1"}
+                  {stats.instanciasConectadas > 0 ? <Check className="h-3 w-3" /> : "1"}
                 </div>
-                <div>
-                  <h4 className="font-semibold">1. Conectar WhatsApp</h4>
-                  <p className="text-sm text-muted-foreground">Escaneie o QR Code para vincular seu numero.</p>
-                </div>
+                <span className="text-xs font-medium">Conectar WhatsApp</span>
               </div>
 
-              <div className={`flex items-start gap-4 ${stats.grupos > 0 ? "" : "opacity-60"}`}>
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 mt-1 ${
-                  stats.grupos > 0
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card border-2 border-border text-muted-foreground"
+              <div className={`flex items-center gap-2 p-2 rounded-lg bg-muted/50 ${stats.grupos > 0 ? "" : "opacity-60"}`}>
+                <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                  stats.grupos > 0 ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"
                 }`}>
-                  {stats.grupos > 0 ? <Check className="h-4 w-4" /> : "2"}
+                  {stats.grupos > 0 ? <Check className="h-3 w-3" /> : "2"}
                 </div>
-                <div>
-                  <h4 className="font-semibold">2. Sincronizar grupos</h4>
-                  <p className="text-sm text-muted-foreground">Importe seus grupos do WhatsApp.</p>
-                </div>
+                <span className="text-xs font-medium">Sincronizar grupos</span>
               </div>
 
-              <div className={`flex items-start gap-4 ${stats.categorias > 0 ? "" : "opacity-60"}`}>
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 mt-1 ${
-                  stats.categorias > 0
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card border-2 border-border text-muted-foreground"
+              <div className={`flex items-center gap-2 p-2 rounded-lg bg-muted/50 ${stats.categorias > 0 ? "" : "opacity-60"}`}>
+                <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                  stats.categorias > 0 ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"
                 }`}>
-                  {stats.categorias > 0 ? <Check className="h-4 w-4" /> : "3"}
+                  {stats.categorias > 0 ? <Check className="h-3 w-3" /> : "3"}
                 </div>
-                <div>
-                  <h4 className="font-semibold">3. Criar categorias</h4>
-                  <p className="text-sm text-muted-foreground">Organize grupos por tags (Vendas, Suporte, etc).</p>
-                </div>
+                <span className="text-xs font-medium">Criar categorias</span>
               </div>
 
-              <div className={`flex items-start gap-4 ${stats.gatilhosAtivos > 0 ? "" : "opacity-60"}`}>
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 mt-1 ${
-                  stats.gatilhosAtivos > 0
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card border-2 border-border text-muted-foreground"
+              <div className={`flex items-center gap-2 p-2 rounded-lg bg-muted/50 ${stats.gatilhosAtivos > 0 ? "" : "opacity-60"}`}>
+                <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                  stats.gatilhosAtivos > 0 ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"
                 }`}>
-                  {stats.gatilhosAtivos > 0 ? <Check className="h-4 w-4" /> : "4"}
+                  {stats.gatilhosAtivos > 0 ? <Check className="h-3 w-3" /> : "4"}
                 </div>
-                <div>
-                  <h4 className="font-semibold">4. Configurar primeiro gatilho</h4>
-                  <p className="text-sm text-muted-foreground">Crie uma automacao para moderar ou responder.</p>
-                </div>
+                <span className="text-xs font-medium">Criar gatilho</span>
               </div>
-            </div>
-
-            <div className="pt-6 border-t mt-6 text-right">
-              <Button variant="ghost" className="text-muted-foreground">
-                Pular setup
-              </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Instancia */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <Link href="/instances">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Instancia</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-lg">
-                  <Smartphone className="h-4 w-4 text-green-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-green-100 rounded">
+                  <Smartphone className="h-3.5 w-3.5 text-green-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Instancia</span>
               </div>
-              <p className="text-2xl font-bold mt-4 flex items-center">
-                {stats.instanciasConectadas > 0 ? (
-                  <>
-                    <span className="w-3 h-3 rounded-full bg-primary mr-2"></span>
-                    Conectada
-                  </>
-                ) : (
-                  <>
-                    <span className="w-3 h-3 rounded-full bg-muted-foreground mr-2"></span>
-                    Desconectada
-                  </>
-                )}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {instanciaConectada?.liveStatus?.phoneFormatted || instanciaConectada?.numero_telefone || instanciaConectada?.nome_instancia || "Nenhum numero"}
+              <p className="text-lg font-bold mt-2 flex items-center">
+                <span className={`w-2 h-2 rounded-full mr-1.5 ${stats.instanciasConectadas > 0 ? "bg-primary" : "bg-muted-foreground"}`}></span>
+                {stats.instanciasConectadas > 0 ? "Online" : "Offline"}
               </p>
             </CardContent>
           </Card>
         </Link>
 
-        {/* Grupos */}
         <Link href="/groups">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Grupos</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-lg">
-                  <Users className="h-4 w-4 text-blue-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-blue-100 rounded">
+                  <Users className="h-3.5 w-3.5 text-blue-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Grupos</span>
               </div>
-              <p className="text-2xl font-bold mt-4">{stats.grupos} grupos</p>
-              <p className="text-sm text-muted-foreground">{stats.categorias} categorias</p>
+              <p className="text-lg font-bold mt-2">{stats.grupos}</p>
             </CardContent>
           </Card>
         </Link>
 
-        {/* Gatilhos */}
         <Link href="/triggers">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Gatilhos</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-yellow-100 rounded-lg">
-                  <Zap className="h-4 w-4 text-yellow-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-yellow-100 rounded">
+                  <Zap className="h-3.5 w-3.5 text-yellow-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Gatilhos</span>
               </div>
-              <p className="text-2xl font-bold mt-4">{stats.gatilhosAtivos} ativos</p>
-              <p className="text-sm text-muted-foreground">{stats.gatilhosPausados} pausados</p>
+              <p className="text-lg font-bold mt-2">{stats.gatilhosAtivos} <span className="text-xs font-normal text-muted-foreground">ativos</span></p>
             </CardContent>
           </Card>
         </Link>
 
-        {/* Mensagens */}
         <Link href="/messages">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Mensagens</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-indigo-100 rounded-lg">
-                  <Send className="h-4 w-4 text-indigo-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-indigo-100 rounded">
+                  <Send className="h-3.5 w-3.5 text-indigo-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Mensagens</span>
               </div>
-              <p className="text-2xl font-bold mt-4">0 agendadas</p>
-              <p className="text-sm text-muted-foreground">0 enviadas</p>
+              <p className="text-lg font-bold mt-2">0 <span className="text-xs font-normal text-muted-foreground">agendadas</span></p>
             </CardContent>
           </Card>
         </Link>
 
-        {/* Agentes IA */}
         <Link href="/ai">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Agentes IA</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded-lg">
-                  <Bot className="h-4 w-4 text-purple-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-purple-100 rounded">
+                  <Bot className="h-3.5 w-3.5 text-purple-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Agentes IA</span>
               </div>
-              <p className="text-2xl font-bold mt-4">{stats.agentesAtivos} ativos</p>
-              <p className="text-sm text-muted-foreground">{agentes.length} configurados</p>
+              <p className="text-lg font-bold mt-2">{stats.agentesAtivos} <span className="text-xs font-normal text-muted-foreground">ativos</span></p>
             </CardContent>
           </Card>
         </Link>
 
-        {/* Transcricao */}
         <Link href="/transcription">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Transcricao</h4>
-                <div className="w-8 h-8 flex items-center justify-center bg-pink-100 rounded-lg">
-                  <FileAudio className="h-4 w-4 text-pink-600" />
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center bg-pink-100 rounded">
+                  <FileAudio className="h-3.5 w-3.5 text-pink-600" />
                 </div>
+                <span className="text-xs font-medium text-muted-foreground">Transcricao</span>
               </div>
-              <p className="text-2xl font-bold mt-4">0 grupos</p>
-              <p className="text-sm text-muted-foreground">configurados</p>
+              <p className="text-lg font-bold mt-2">0 <span className="text-xs font-normal text-muted-foreground">grupos</span></p>
             </CardContent>
           </Card>
         </Link>
@@ -356,112 +303,64 @@ export function CommandCenter() {
 
       {/* Quick Actions */}
       <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold">Acoes Rapidas</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Execute tarefas comuns com um unico clique.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <Button onClick={() => setMessageModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Nova mensagem
-            </Button>
-            <Button variant="secondary" asChild>
-              <Link href="/triggers/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Novo gatilho
-              </Link>
-            </Button>
-            <Button variant="outline" onClick={() => setSyncDialogOpen(true)}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Sincronizar grupos
-            </Button>
+        <CardContent className="p-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">Acoes Rapidas</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button size="sm" className="h-7 text-xs" onClick={() => setMessageModalOpen(true)}>
+                <Plus className="h-3 w-3 mr-1" />
+                Mensagem
+              </Button>
+              <Button size="sm" variant="secondary" className="h-7 text-xs" asChild>
+                <Link href="/triggers/new">
+                  <Plus className="h-3 w-3 mr-1" />
+                  Gatilho
+                </Link>
+              </Button>
+              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setSyncDialogOpen(true)}>
+                <RefreshCw className="h-3 w-3 mr-1" />
+                Sincronizar
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Recent Activity */}
       <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold">Atividade Recente</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Ultimas acoes realizadas na plataforma.
-          </p>
-          <div className="mt-4 flow-root">
-            <ul role="list" className="-mb-8">
-              <li>
-                <div className="relative pb-8">
-                  <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-border" aria-hidden="true"></span>
-                  <div className="relative flex gap-3">
-                    <div>
-                      <span className="h-8 w-8 rounded-full bg-accent flex items-center justify-center ring-8 ring-card">
-                        <Zap className="h-4 w-4 text-accent-foreground" />
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1 pt-1.5 flex justify-between gap-4">
-                      <div>
-                        <p className="text-sm">
-                          Gatilho <span className="font-medium text-primary">&quot;Boas-vindas&quot;</span> foi ativado no grupo <span className="font-medium">Vendas SP</span>.
-                        </p>
-                      </div>
-                      <div className="text-right text-sm whitespace-nowrap text-muted-foreground">
-                        <time>2 min atras</time>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div className="relative pb-8">
-                  <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-border" aria-hidden="true"></span>
-                  <div className="relative flex gap-3">
-                    <div>
-                      <span className="h-8 w-8 rounded-full bg-muted-foreground flex items-center justify-center ring-8 ring-card">
-                        <Users className="h-4 w-4 text-white" />
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1 pt-1.5 flex justify-between gap-4">
-                      <div>
-                        <p className="text-sm">
-                          Sincronizacao completada. <span className="font-medium">2 novos grupos</span> adicionados.
-                        </p>
-                      </div>
-                      <div className="text-right text-sm whitespace-nowrap text-muted-foreground">
-                        <time>1 hora atras</time>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div className="relative">
-                  <div className="relative flex gap-3">
-                    <div>
-                      <span className="h-8 w-8 rounded-full bg-primary flex items-center justify-center ring-8 ring-card">
-                        <UserPlus className="h-4 w-4 text-primary-foreground" />
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1 pt-1.5 flex justify-between gap-4">
-                      <div>
-                        <p className="text-sm">
-                          Usuario <span className="font-medium">Carlos</span> foi adicionado a equipe.
-                        </p>
-                      </div>
-                      <div className="text-right text-sm whitespace-nowrap text-muted-foreground">
-                        <time>3 horas atras</time>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
+        <CardContent className="p-3">
+          <h3 className="text-sm font-semibold mb-3">Atividade Recente</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-5 w-5 rounded-full bg-accent flex items-center justify-center">
+                <Zap className="h-2.5 w-2.5 text-accent-foreground" />
+              </span>
+              <span className="flex-1">Gatilho <span className="font-medium text-primary">&quot;Boas-vindas&quot;</span> ativado</span>
+              <span className="text-muted-foreground">2 min</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-5 w-5 rounded-full bg-muted-foreground flex items-center justify-center">
+                <Users className="h-2.5 w-2.5 text-white" />
+              </span>
+              <span className="flex-1">Sincronizacao: <span className="font-medium">2 grupos</span> adicionados</span>
+              <span className="text-muted-foreground">1h</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                <UserPlus className="h-2.5 w-2.5 text-primary-foreground" />
+              </span>
+              <span className="flex-1"><span className="font-medium">Carlos</span> adicionado a equipe</span>
+              <span className="text-muted-foreground">3h</span>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground border-t">
-        <p>Copyright &copy; 2025 Sincron Grupos. Todos os direitos reservados.</p>
+      <footer className="py-2 text-center text-xs text-muted-foreground">
+        <p>&copy; 2025 Sincron Grupos</p>
       </footer>
 
       {/* Drawers */}
