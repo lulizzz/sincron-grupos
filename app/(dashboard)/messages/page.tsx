@@ -128,6 +128,7 @@ export default function MessagesPage() {
   // Modal state
   const [dialogOpen, setDialogOpen] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [editingMensagem, setEditingMensagem] = useState<MensagemProgramada | null>(null)
 
   // Form state
   const [tipoMensagem, setTipoMensagem] = useState<TipoMensagem>("texto")
@@ -256,6 +257,39 @@ export default function MessagesPage() {
     setEnviarAgora(true)
     setDataAgendamento("")
     setHoraAgendamento("")
+    setEditingMensagem(null)
+  }
+
+  const handleEditar = (mensagem: MensagemProgramada) => {
+    setEditingMensagem(mensagem)
+    setTipoMensagem(mensagem.tipo_mensagem as TipoMensagem)
+    setConteudoTexto(mensagem.conteudo_texto || "")
+    setUrlMidia(mensagem.url_midia || "")
+    setLegendaMidia(mensagem.tipo_mensagem !== "texto" ? (mensagem.conteudo_texto || "") : "")
+
+    if (mensagem.grupos_ids && mensagem.grupos_ids.length > 0) {
+      setTipoDestinatario("grupos")
+      setGruposSelecionados(new Set(mensagem.grupos_ids))
+      setCategoriaSelecionada(null)
+    } else if (mensagem.categoria_id) {
+      setTipoDestinatario("categoria")
+      setCategoriaSelecionada(mensagem.categoria_id)
+      const gruposDaCategoria = grupos.filter(g => g.id_categoria === mensagem.categoria_id)
+      setGruposSelecionados(new Set(gruposDaCategoria.map(g => g.id)))
+    }
+
+    if (mensagem.dt_agendamento) {
+      setEnviarAgora(false)
+      const dt = new Date(mensagem.dt_agendamento)
+      setDataAgendamento(dt.toISOString().split("T")[0])
+      setHoraAgendamento(dt.toTimeString().slice(0, 5))
+    } else {
+      setEnviarAgora(true)
+      setDataAgendamento("")
+      setHoraAgendamento("")
+    }
+
+    setDialogOpen(true)
   }
 
   const toggleGrupo = (grupoId: number) => {
@@ -318,30 +352,55 @@ export default function MessagesPage() {
         dtAgendamento = new Date(`${dataAgendamento}T${horaAgendamento}`).toISOString()
       }
 
-      const { data: novaMensagem, error } = await supabase
-        .from("mensagens_programadas")
-        .insert({
-          id_organizacao: usuarioSistema.id_organizacao,
-          tipo_mensagem: tipoMensagem,
-          conteudo_texto: tipoMensagem === "texto" ? conteudoTexto : legendaMidia || null,
-          url_midia: tipoMensagem !== "texto" ? urlMidia : null,
-          grupos_ids: tipoDestinatario === "grupos" ? Array.from(gruposSelecionados) : null,
-          categoria_id: tipoDestinatario === "categoria" ? categoriaSelecionada : null,
-          enviar_agora: saveAsDraft ? false : enviarAgora,
-          dt_agendamento: dtAgendamento,
-          status: saveAsDraft ? "rascunho" : (enviarAgora ? "enviando" : "pendente"),
-          criado_por: usuarioSistema.id,
-        })
-        .select()
-        .single()
-
-      if (error) throw error
-
-      if (!saveAsDraft && enviarAgora && instanceToken && novaMensagem) {
-        await processarEnvio(novaMensagem as MensagemProgramada)
+      const mensagemData = {
+        tipo_mensagem: tipoMensagem,
+        conteudo_texto: tipoMensagem === "texto" ? conteudoTexto : legendaMidia || null,
+        url_midia: tipoMensagem !== "texto" ? urlMidia : null,
+        grupos_ids: tipoDestinatario === "grupos" ? Array.from(gruposSelecionados) : null,
+        categoria_id: tipoDestinatario === "categoria" ? categoriaSelecionada : null,
+        enviar_agora: saveAsDraft ? false : enviarAgora,
+        dt_agendamento: dtAgendamento,
+        status: saveAsDraft ? "rascunho" : (enviarAgora ? "enviando" : "pendente"),
       }
 
-      toast.success(saveAsDraft ? "Rascunho salvo!" : (enviarAgora ? "Mensagem enviada!" : "Mensagem agendada!"))
+      let mensagemFinal: MensagemProgramada | null = null
+
+      if (editingMensagem) {
+        // Atualizando mensagem existente
+        const { data: updatedMensagem, error } = await supabase
+          .from("mensagens_programadas")
+          .update(mensagemData)
+          .eq("id", editingMensagem.id)
+          .select()
+          .single()
+
+        if (error) throw error
+        mensagemFinal = updatedMensagem as MensagemProgramada
+      } else {
+        // Criando nova mensagem
+        const { data: novaMensagem, error } = await supabase
+          .from("mensagens_programadas")
+          .insert({
+            ...mensagemData,
+            id_organizacao: usuarioSistema.id_organizacao,
+            criado_por: usuarioSistema.id,
+          })
+          .select()
+          .single()
+
+        if (error) throw error
+        mensagemFinal = novaMensagem as MensagemProgramada
+      }
+
+      if (!saveAsDraft && enviarAgora && instanceToken && mensagemFinal) {
+        await processarEnvio(mensagemFinal)
+      }
+
+      toast.success(
+        editingMensagem
+          ? "Mensagem atualizada!"
+          : (saveAsDraft ? "Rascunho salvo!" : (enviarAgora ? "Mensagem enviada!" : "Mensagem agendada!"))
+      )
       setDialogOpen(false)
       resetForm()
       loadData()
@@ -660,7 +719,7 @@ export default function MessagesPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditar(msg)}>
                         <Pencil className="h-4 w-4 text-muted-foreground" />
                       </Button>
                       <AlertDialog>
@@ -783,7 +842,7 @@ export default function MessagesPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditar(msg)}>
                         <Pencil className="h-4 w-4 text-muted-foreground" />
                       </Button>
                       <AlertDialog>
@@ -819,16 +878,16 @@ export default function MessagesPage() {
         <p>Copyright &copy; 2025 Sincron Grupos</p>
       </footer>
 
-      {/* New Message Modal */}
+      {/* Message Modal */}
       <Dialog open={dialogOpen} onOpenChange={(open) => {
         setDialogOpen(open)
         if (!open) resetForm()
       }}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Nova Mensagem em Massa</DialogTitle>
+            <DialogTitle>{editingMensagem ? "Editar Mensagem" : "Nova Mensagem em Massa"}</DialogTitle>
             <DialogDescription>
-              Envie ou agende mensagens para seus grupos.
+              {editingMensagem ? "Edite e reenvie ou reagende sua mensagem." : "Envie ou agende mensagens para seus grupos."}
             </DialogDescription>
           </DialogHeader>
 
